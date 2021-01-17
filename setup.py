@@ -9,7 +9,7 @@ def basic():
 
 def docker():
     os.system("sudo snap install docker")
-#    os.system("sudo apt install docker-compost -y")
+    os.system("sudo usermod -aG docker $USER")
     print("Docker components added (docker, docker-compose)")
 
 def git():
@@ -24,7 +24,6 @@ def networkData():
     os.remove("ip.txt")
     f.readline() 
     ip = f.readline().split()[1]
-
     print( "This computers IP address is " + ip )
 
 def setup():
