@@ -27,7 +27,7 @@ def networkData():
 
     print( "This computers IP address is " + ip )
 
-def init():
+def setup():
     print("What kind of opperation are you planning?")
     print("\t1)Basic stuff(vim, net-tools)")
     print("\t2)Git")
@@ -45,6 +45,24 @@ def init():
     if ip != "":
         networkData()
 
+def gitClone():
+    print("1) Docker project")
+
+    result = input()
+
+    if "1" in result:
+        os.system('git clone https://github.com/chesspro13/serverStuff.git')
+        print("Server stuff downloaded")
+def init():
+    print("1) Computer initial setup")
+    print("2) Git clone")
+
+    result = input()
+
+    if result == "1":
+        setup()
+    if result == "2":
+        gitClone()
 
 init()
 
