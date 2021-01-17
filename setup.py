@@ -14,6 +14,8 @@ def docker():
 
 def git():
     os.system("sudo apt install git -y")
+    os.system('git config --global user.email "chesspro13@gmail.com"')
+    os.system('git config --global user.name "Brandon"')
     print("Git installed")
 
 def networkData():
@@ -29,7 +31,7 @@ def init():
     print("What kind of opperation are you planning?")
     print("\t1)Basic stuff(vim, net-tools)")
     print("\t2)Git")
-    print("\t3)Basic docker(opt 1+ docker")
+    print("\t3)Basic docker")
 
     result = input()
 
