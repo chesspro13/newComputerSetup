@@ -15,6 +15,11 @@ def vim():
     os.system("sudo apt install vim -y")
     changesMade += "\n\tVim installed"
 
+def matrix():
+    global changesMade
+    os.system("sudo apt install cmatrix -y")
+    changesMade += "\n\tCMatrix installed")
+
 def netTools():
     global changesMade
     os.system("sudo apt install net-tools -y")
@@ -110,6 +115,7 @@ def setup():
     print("\t3)Git")
     print("\t4)Basic docker")
     print("\t5)Pip")
+    print("\t6)CMatrix")
 
     result = input()
 
@@ -123,6 +129,8 @@ def setup():
         docker()
     if "5" in result:
         pip()
+    if "6" in result:
+        matrix()
 
     if ip != "":
         networkData()
