@@ -1,27 +1,42 @@
 import os
 
 ip = ""
+global needReboot
+global changesMade
+
 needReboot = False
+changesMade = "Stuff added to the system:"
 
 
 def vim():
+
+    global changesMade
+
     os.system("sudo apt install vim -y")
-    print("Vim installed.")
+    changesMade += "\n\tVim installed"
 
 def netTools():
+    global changesMade
     os.system("sudo apt install net-tools -y")
-    print("Net-tools installed")
+    changesMade += "\n\tNet-tools installed"
 
 def docker():
+    global changesMade
     os.system("sudo snap install docker")
     os.system("sudo usermod -aG docker $USER")
-    print("Docker components added (docker, docker-compose)")
+    changesMade += "\n\tDocker components added (docker, docker-compose)"
 
 def git():
+    global changesMade
     os.system("sudo apt install git -y")
     os.system('git config --global user.email "chesspro13@gmail.com"')
     os.system('git config --global user.name "Brandon"')
-    print("Git installed")
+    changesMade += "\n\tGit installed"
+
+def pip():
+    global changesMade
+    os.system("sudo apt install python3-pip")
+    changesMade += "\n\tPip installed"
 
 def networkData():
     os.system("ifconfig > ip.txt")
@@ -59,6 +74,7 @@ def setIP():
 
 
 def editIP(addr):
+    global changesMade
     try:
 
         f = open("/etc/dhcpcd.conf", "a")
@@ -73,6 +89,7 @@ def editIP(addr):
 #        os.system("sudo " + nc + " >> /etc/dhcpcd.conf")
         needReboot = True
         print("Static IP address set to [192.168.0." + str(addr) + "/24]")
+        changesMade += "\n\tStatic IP address set to [192.168.0." + str(addr) + "/24]"
     except:
         print("Something went wrong setting a static IP address!")
 
@@ -92,6 +109,7 @@ def setup():
     print("\t2)net-tools")
     print("\t3)Git")
     print("\t4)Basic docker")
+    print("\t5)Pip")
 
     result = input()
 
@@ -103,16 +121,13 @@ def setup():
         git()
     if "4" in result:
         docker()
+    if "5" in result:
+        pip()
 
     if ip != "":
         networkData()
 
-    if needReboot:
-        print("\n\n==There have been changes to your system that require a reboot to take effect. Do you wish to reboot? [y/n]")
-        rb = input()
-
-        if "y" in rb.lower() or "yes" in rb.lower():
-            os.system("sudo reboot")
+    
 
 def gitClone():
     print("1) Docker project")
@@ -134,6 +149,7 @@ def sudoTest():
         quit()
 
 def init():
+    global changesMade
     sudoTest()
     print("\n\n")
     print("1) Computer initial setup")
@@ -145,6 +161,15 @@ def init():
         setup()
     if result == "2":
         gitClone()
+
+    print("\n\n\n" + changesMade)
+
+    if needReboot:
+        print("\n\n==There have been changes to your system that require a reboot to take effect. Do you wish to reboot? [y/n]")
+        rb = input()
+
+        if "y" in rb.lower() or "yes" in rb.lower():
+            os.system("sudo reboot")
 
 init()
 
