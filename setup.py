@@ -1,4 +1,6 @@
 import os
+import sys
+import subprocess
 
 ip = ""
 global needReboot
@@ -18,7 +20,7 @@ def vim():
 def matrix():
     global changesMade
     os.system("sudo apt install cmatrix -y")
-    changesMade += "\n\tCMatrix installed")
+    changesMade += "\n\tCMatrix installed"
 
 def netTools():
     global changesMade
@@ -30,6 +32,22 @@ def docker():
     os.system("sudo snap install docker")
     os.system("sudo usermod -aG docker $USER")
     changesMade += "\n\tDocker components added (docker, docker-compose)"
+
+def awesome():
+    global changesMade
+    os.system("sudo apt-get install awesome -y")
+    changesMade += "\n\tInstalled Awesome Window Manager"
+
+def htop():
+    global changesMade
+    os.system("sudo apt-get install htop -y")
+    changesMade += "\n\tHtop installed"
+
+def gnome():
+    global changesMade
+    os.system("sudo apt-get install tasksel -y")
+    os.system("sudo tasksel tsall ubuntu-desktop -y")
+    changesMade += "\n\tGnome installed"
 
 def git():
     global changesMade
@@ -50,6 +68,42 @@ def networkData():
     f.readline() 
     ip = f.readline().split()[1]
     print( "This computers IP address is " + ip )
+
+def keybindings():
+
+    # defining keys & strings to be used
+    key = "org.gnome.settings-daemon.plugins.media-keys custom-keybindings"
+    subkey1 = key.replace(" ", ".")[:-1]+":"
+    item_s = "/"+key.replace(" ", "/").replace(".", "/")+"/"
+    firstname = "custom"
+    # get the current list of custom shortcuts
+    get  = lambda cmd: subprocess.check_output(["/bin/bash", "-c", cmd]).decode("utf-8")
+    array_str = get("gsettings get "+key)
+    # in case the array was empty, remove the annotation hints
+    command_result = array_str.lstrip("@as")
+    current = eval(command_result)
+    # make sure the additional keybinding mention is no duplicate
+    n = 1
+    while True:
+        new = item_s+firstname+str(n)+"/"
+        if new in current:
+            n = n+1
+        else:
+            break
+    # add the new keybinding to the list
+    current.append(new)
+
+    setKeyBinding(key, current, subkey1, new, "Open a terminal", "gnome-terminal")
+
+def setKeyBinding(key, current, subkey1, new, a, b, c):
+    # create the shortcut, set the name, command and shortcut key
+    cmd0 = 'gsettings set '+key+' "'+str(current)+'"'
+    cmd1 = 'gsettings set '+subkey1+new+" name '"+sys.argv[1]+"'"
+    cmd2 = 'gsettings set '+subkey1+new+" command '"+sys.argv[2]+"'"
+    cmd3 = 'gsettings set '+subkey1+new+" binding '"+sys.argv[3]+"'"
+
+    for cmd in [cmd0, cmd1, cmd2, cmd3]:
+        subprocess.call(["/bin/bash", "-c", cmd])
 
 def setIP():
     print("\nWhat do you want to set your IP address as? 192.168.0.XXX")
@@ -116,6 +170,9 @@ def setup():
     print("\t4)Basic docker")
     print("\t5)Pip")
     print("\t6)CMatrix")
+    print("\t7)Gnome")
+    print("\t8)Htop")
+    print("\t9)Awesome wm")
 
     result = input()
 
@@ -131,6 +188,12 @@ def setup():
         pip()
     if "6" in result:
         matrix()
+    if "7" in result:
+        gnome()
+    if "8" in result:
+        htop()
+    if "9" in result:
+        awesome()
 
     if ip != "":
         networkData()
